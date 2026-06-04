@@ -54,7 +54,7 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
-    uint32_t step = 1;
+    int32_t step = 1;
     char *end = NULL;
     if (args) {
         /* 0 : means Automatic base detection
