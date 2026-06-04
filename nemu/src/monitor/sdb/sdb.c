@@ -60,10 +60,8 @@ static int cmd_si(char *args) {
         /* 0 : means Automatic base detection
          * end : pointer to the end position()
          */
-        printf("DEBUG: args='%s' [len=%zu]\n", args, strlen(args));
         step = strtol(args, &end, 0);
-        printf("DEBUG: step=%d, *end='%c'(%d)\n", step, *end, *end);
-        if (*end != '\0' || step <= 0) {
+        if ((*end != '\0' && *end != ' ') || step <= 0) {
             Warning("The step value is invalid");
             return 0;
         }
