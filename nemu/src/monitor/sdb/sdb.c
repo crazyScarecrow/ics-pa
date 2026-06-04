@@ -55,10 +55,15 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
     uint32_t step = 1;
+    char *end = NULL;
     if (args) {
-        step = atoi(args);
-        if (step <= 0) {
-            panic("The step value is invalid\n");
+        /* 0 : means Automatic base detection
+         * end : pointer to the end position()
+         */
+        step = strtol(args, &end, 0);
+        if (*end != '\0' || step <= 0) {
+            printf("The step value is invalid\n");
+            return 0;
         }
     }
 
