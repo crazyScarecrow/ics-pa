@@ -62,7 +62,7 @@ static int cmd_si(char *args) {
          */
         step = strtol(args, &end, 0);
         if (*end != '\0' || step <= 0) {
-            Warning("The step value is invalid\n");
+            Warning("The step value is invalid");
             return 0;
         }
     }
