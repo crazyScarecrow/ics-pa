@@ -57,8 +57,9 @@ static int cmd_si(char *args) {
     uint32_t step = 1;
     if (args) {
         step = atoi(args);
-        if (step <= 0) panic("The step is invalid\n");
-        return -1;
+        if (step <= 0) {
+            panic("The step value is invalid\n");
+        }
     }
 
     cpu_exec(step);
