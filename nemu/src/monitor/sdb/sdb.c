@@ -53,6 +53,18 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+    uint32_t step = 1;
+    if (args) {
+        step = atoi(args);
+        if (step <= 0) panic("The step is invalid\n");
+        return -1;
+    }
+
+    cpu_exec(step);
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -62,6 +74,7 @@ static struct {
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
+  { "si", "Single-step execution, you can also enter the number of steps to execute", cmd_si },
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
