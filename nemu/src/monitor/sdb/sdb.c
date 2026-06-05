@@ -72,6 +72,10 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
+    if (args == NULL) {
+        Warning("The info cmd should use args (w/r)\n");
+        return -1;
+    }
     if (0 == strcmp("r", args)) {
         isa_reg_display();
         return 0;
