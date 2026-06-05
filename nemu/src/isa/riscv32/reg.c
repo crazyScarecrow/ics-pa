@@ -23,11 +23,23 @@ const char *regs[] = {
   "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"
 };
 
+static void repeat_space(int count) {
+    int i = 0;
+    char space_arr[64] = { 0 };
+    for (i = 0; i < count; i++)
+        space_arr[i] = ' ';
+    puts(space_arr);
+}
+
 void isa_reg_display() {
     uint32_t i = 0;
-    printf("reg-name\t\t hex-value \t\t dec-value\n");
+    printf("reg-name");
+    repeat_space(8);
+    printf(" hex-value ");
+    repeat_space(8);
+    printf(" dec-value\n");
     for(i = 0; i < 32; i++) {
-        printf("    %s               0x%x                %u\n", regs[i], cpu.gpr[i], cpu.gpr[i]);
+        printf("    %s                       0x%x                    %u\n", regs[i], cpu.gpr[i], cpu.gpr[i]);
     }
 
     return;
