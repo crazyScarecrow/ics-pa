@@ -27,7 +27,7 @@ void isa_reg_display() {
     uint32_t i = 0;
     printf("reg-name%*s hex-value%*s dec-value\n", 8, "", 8, "");
     for(i = 0; i < 32; i++) {
-        printf("    %s                       0x%x                    %u\n", regs[i], cpu.gpr[i], cpu.gpr[i]);
+        printf("%*s 0x%*x %*u\n",4, regs[i], 8, cpu.gpr[i], 8, cpu.gpr[i]);
     }
 
     return;
