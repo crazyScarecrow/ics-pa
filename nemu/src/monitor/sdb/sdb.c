@@ -83,6 +83,35 @@ static int cmd_info(char *args) {
     return -1;
 }
 
+extern word_t vaddr_read(vaddr_t addr, int len);
+static int cmd_mem_scan(char *args) {
+    int32_t length = 0, addr = 0, i = 0;
+    char *end = NULL;
+    char *token = strtok(args, " ");
+    if (NULL == token) {
+        Warning("usage invalid, input scan memory length\n");
+        return 0;
+    }
+    length = strtol(token, &end, 0);
+    if (length <= 0) {
+        Warning("invalid memory length\n");
+        return 0;
+    }
+    token = strtok(NULL, " ");
+    if (NULL == token) {
+        Warning("usage invalid, input scan memory address\n");
+        return 0;
+    }
+
+    addr = strtol(token, &end, 0);
+
+    for (i = 0; i < length; i++) {
+        printf("0x%x: 0x%x\n", addr, vaddr_read(addr, sizeof(int)));
+        addr += 4;
+    }
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -94,6 +123,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "si", "Single-step execution, you can also enter the number of steps to execute", cmd_si },
   { "info", "Print register/watchpointer information, e.g. info r/w", cmd_info},
+  { "x", "Scan the specified memory area. e.g. x 10 0x80000000", cmd_mem_scan},
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
