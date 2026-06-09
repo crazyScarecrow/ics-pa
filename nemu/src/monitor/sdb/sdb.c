@@ -89,17 +89,17 @@ static int cmd_mem_scan(char *args) {
     char *end = NULL;
     char *token = strtok(args, " ");
     if (NULL == token) {
-        Warning("usage invalid, input scan memory length\n");
+        Warning("usage invalid, input scan memory length");
         return 0;
     }
     length = strtol(token, &end, 0);
     if (length <= 0) {
-        Warning("invalid memory length\n");
+        Warning("invalid memory length");
         return 0;
     }
     token = strtok(NULL, " ");
     if (NULL == token) {
-        Warning("usage invalid, input scan memory address\n");
+        Warning("usage invalid, input scan memory address");
         return 0;
     }
 
