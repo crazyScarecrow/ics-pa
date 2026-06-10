@@ -46,8 +46,8 @@ static struct rule {
   {"/",                 '/'},         // div
   {"\\(",               '('},         // left parentheses
   {"\\)",               ')'},         // right parentheses
-  {"[0-9]+",            TK_NUM},      // 0-9 one or more number
   {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
+  {"[0-9]+",            TK_NUM},      // 0-9 one or more number
   {"^-[0-9]+",          TK_NEGNUM},   // negitive number
 };
 
