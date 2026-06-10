@@ -140,6 +140,7 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
   eval(0,0);
+  *success = true;
 
   return 0;
 }
