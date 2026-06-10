@@ -41,6 +41,7 @@ static struct rule {
   // Finally only plain +.
   {"\\+",               TK_OP},       // plus
   {"==",                TK_EQ},       // equal
+  {"^-[0-9]+",          TK_NEGNUM},   // negitive number
   {"-",                 TK_OP},       // minus
   {"\\*",               TK_OP},       // multi
   {"/",                 TK_OP},       // div
@@ -48,7 +49,6 @@ static struct rule {
   {"\\)",               ')'},         // right parentheses
   {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
   {"[0-9]+",            TK_NUM},      // 0-9 one or more number
-  {"^-[0-9]+",          TK_NEGNUM},   // negitive number
 };
 
 #define NR_REGEX ARRLEN(rules)
