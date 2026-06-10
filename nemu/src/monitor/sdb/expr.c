@@ -37,8 +37,15 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
+  // The first char '\' means C Escape character "\\+" ==> "\+". '\+' means Regex escape character
+  // Finally only plain +.
+  {"\\+",   '+'},         // plus
+  {"==",    TK_EQ},       // equal
+  {"-",     '-'},         // minus
+  {"\\*",   '*'},         // multi
+  {"/",     '/'},         // div
+  {"\\(",   '('},         // left parentheses
+  {"\\)",   ')'},         // right parentheses
 };
 
 #define NR_REGEX ARRLEN(rules)

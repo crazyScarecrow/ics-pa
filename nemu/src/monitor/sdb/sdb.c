@@ -76,16 +76,17 @@ static int cmd_info(char *args) {
         Warning("The info cmd should use with args (w/r)");
         return 0;
     }
-    if (0 == strcmp("r", args)) {
+    if (0 == strncmp("r", args, 1)) {
         isa_reg_display();
         return 0;
     }
-    return -1;
+    return 0;
 }
 
 extern word_t vaddr_read(vaddr_t addr, int len);
 static int cmd_mem_scan(char *args) {
-    int32_t length = 0, addr = 0, i = 0;
+    int32_t length = 0, i = 0;
+    vaddr_t addr = 0;
     char *end = NULL;
     char *token = strtok(args, " ");
     if (NULL == token) {
@@ -104,6 +105,10 @@ static int cmd_mem_scan(char *args) {
     }
 
     addr = strtol(token, &end, 0);
+    if (*end != '\0') {
+        Warning("invalid address");
+        return 0;
+    }
 
     for (i = 0; i < length; i++) {
         printf("0x%x: 0x%x\n", addr, vaddr_read(addr, sizeof(int)));
