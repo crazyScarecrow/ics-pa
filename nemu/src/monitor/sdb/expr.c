@@ -106,20 +106,23 @@ static bool make_token(char *e) {
 
         switch (rules[i].token_type) {
           case TK_NUM:
-          case TK_HEXNUM:
             tokens[i].type = TK_NUM;
-            memset(tokens[i].str, 0, sizeof(tokens[i].str));
-            memcpy(tokens[i].str, substr_start, substr_len);
+            break;
+          case TK_HEXNUM:
+            tokens[i].type = TK_HEXNUM;
             break;
           case TK_OP:
+            if ('\\' == rules[i].regex[0]) {
+                tokens[i].type = (uint8_t)rules[i].regex[1];
+            } else {
+                tokens[i].type = (uint8_t)rules[i].regex[0];
+            }
             tokens[i].type = (uint8_t)rules[i].regex[0];
-            printf("rules[i].regex %c\n",rules[i].regex[0]);
-            printf("substr_start %s", substr_start);
-            memset(tokens[i].str, 0, sizeof(tokens[i].str));
-            memcpy(tokens[i].str, substr_start, substr_len);
             break;
           default: TODO();
         }
+        memset(tokens[i].str, 0, sizeof(tokens[i].str));
+        memcpy(tokens[i].str, substr_start, substr_len);
 
         break;
       }
