@@ -106,23 +106,28 @@ static bool make_token(char *e) {
 
         switch (rules[i].token_type) {
           case TK_NUM:
-            tokens[i].type = TK_NUM;
+            tokens[nr_token].type = TK_NUM;
             break;
           case TK_HEXNUM:
-            tokens[i].type = TK_HEXNUM;
+            tokens[nr_token].type = TK_HEXNUM;
             break;
           case TK_OP:
-            if ('\\' == rules[i].regex[0]) {
-                tokens[i].type = (uint8_t)rules[i].regex[1];
+            if ('\\' == rules[nr_token].regex[0]) {
+                tokens[nr_token].type = (uint8_t)rules[i].regex[1];
             } else {
-                tokens[i].type = (uint8_t)rules[i].regex[0];
+                tokens[nr_token].type = (uint8_t)rules[i].regex[0];
             }
-            tokens[i].type = (uint8_t)rules[i].regex[0];
+            tokens[nr_token].type = (uint8_t)rules[i].regex[0];
+            break;
+          case TK_NOTYPE:
             break;
           default: TODO();
         }
-        memset(tokens[i].str, 0, sizeof(tokens[i].str));
-        memcpy(tokens[i].str, substr_start, substr_len);
+        if (rules[i].token_type != TK_NOTYPE) {
+            memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
+            memcpy(tokens[nr_token].str, substr_start, substr_len);
+            nr_token++;
+        }
 
         break;
       }
