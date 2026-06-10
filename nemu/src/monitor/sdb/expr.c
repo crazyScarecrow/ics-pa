@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM,
 
   /* TODO: Add more token types */
 
@@ -39,13 +39,15 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   // The first char '\' means C Escape character "\\+" ==> "\+". '\+' means Regex escape character
   // Finally only plain +.
-  {"\\+",   '+'},         // plus
-  {"==",    TK_EQ},       // equal
-  {"-",     '-'},         // minus
-  {"\\*",   '*'},         // multi
-  {"/",     '/'},         // div
-  {"\\(",   '('},         // left parentheses
-  {"\\)",   ')'},         // right parentheses
+  {"\\+",               '+'},         // plus
+  {"==",                TK_EQ},       // equal
+  {"-",                 '-'},         // minus
+  {"\\*",               '*'},         // multi
+  {"/",                 '/'},         // div
+  {"\\(",               '('},         // left parentheses
+  {"\\)",               ')'},         // right parentheses
+  {"[0-9]+",            TK_NUM},      // 0-9 one or more number
+  {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
 };
 
 #define NR_REGEX ARRLEN(rules)
