@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_OP
 
   /* TODO: Add more token types */
 
@@ -39,11 +39,11 @@ static struct rule {
   {" +",                TK_NOTYPE},   // spaces
   // The first char '\' means C Escape character "\\+" ==> "\+". '\+' means Regex escape character
   // Finally only plain +.
-  {"\\+",               '+'},         // plus
+  {"\\+",               TK_OP},       // plus
   {"==",                TK_EQ},       // equal
-  {"-",                 '-'},         // minus
-  {"\\*",               '*'},         // multi
-  {"/",                 '/'},         // div
+  {"-",                 TK_OP},       // minus
+  {"\\*",               TK_OP},       // multi
+  {"/",                 TK_OP},       // div
   {"\\(",               '('},         // left parentheses
   {"\\)",               ')'},         // right parentheses
   {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
@@ -111,7 +111,11 @@ static bool make_token(char *e) {
             memset(tokens[i].str, 0, sizeof(tokens[i].str));
             memcpy(tokens[i].str, substr_start, substr_len);
             break;
-          
+          case TK_OP:
+            tokens[i].type = (uint8_t)rules[i].regex[0];
+            memset(tokens[i].str, 0, sizeof(tokens[i].str));
+            memcpy(tokens[i].str, substr_start, substr_len);
+            break;
           default: TODO();
         }
 
