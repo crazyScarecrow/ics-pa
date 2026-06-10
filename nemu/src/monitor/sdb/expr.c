@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM,
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM
 
   /* TODO: Add more token types */
 
@@ -48,6 +48,7 @@ static struct rule {
   {"\\)",               ')'},         // right parentheses
   {"[0-9]+",            TK_NUM},      // 0-9 one or more number
   {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
+  {"^-[0-9]+",          TK_NEGNUM},   // negitive number
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -104,6 +105,11 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
+          case TK_NUM:
+            tokens[i].type = TK_NUM;
+            memset(tokens[i].str, 0, sizeof(tokens[i].str));
+            memcpy(tokens[i].str, substr_start, substr_len);
+            break;
           default: TODO();
         }
 
