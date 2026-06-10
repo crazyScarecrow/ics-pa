@@ -106,10 +106,12 @@ static bool make_token(char *e) {
 
         switch (rules[i].token_type) {
           case TK_NUM:
+          case TK_HEXNUM:
             tokens[i].type = TK_NUM;
             memset(tokens[i].str, 0, sizeof(tokens[i].str));
             memcpy(tokens[i].str, substr_start, substr_len);
             break;
+          
           default: TODO();
         }
 
