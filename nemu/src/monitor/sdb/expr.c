@@ -126,6 +126,10 @@ static bool make_token(char *e) {
   return true;
 }
 
+void eval(uint32_t start, uint32_t end)
+{
+    printf("fuck\n");
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -134,7 +138,8 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  //TODO();
+  eval(0,0);
 
   return 0;
 }
