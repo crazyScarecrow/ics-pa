@@ -114,6 +114,7 @@ static bool make_token(char *e) {
           case TK_OP:
             tokens[i].type = (uint8_t)rules[i].regex[0];
             printf("rules[i].regex %c\n",rules[i].regex[0]);
+            printf("substr_start %s", substr_start);
             memset(tokens[i].str, 0, sizeof(tokens[i].str));
             memcpy(tokens[i].str, substr_start, substr_len);
             break;
