@@ -123,6 +123,12 @@ static bool make_token(char *e) {
           case '/':
             tokens[nr_token].type = '/';
             break;
+          case '(':
+            tokens[nr_token].type = '(';
+            break;
+          case ')':
+            tokens[nr_token].type = ')';
+            break;
           case TK_NEGNUM:
             tokens[nr_token].type = TK_NEGNUM;
             break;
