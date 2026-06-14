@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_OP
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM
 
   /* TODO: Add more token types */
 
@@ -39,12 +39,12 @@ static struct rule {
   {" +",                TK_NOTYPE},   // spaces
   // The first char '\' means C Escape character "\\+" ==> "\+". '\+' means Regex escape character
   // Finally only plain +.
-  {"\\+",               TK_OP},       // plus
+  {"\\+",               '+'},       // plus
   {"==",                TK_EQ},       // equal
-  {"^-[0-9]+",          TK_NEGNUM},   // negitive number
-  {"-",                 TK_OP},       // minus
-  {"\\*",               TK_OP},       // multi
-  {"/",                 TK_OP},       // div
+  {"^-[0-9]+",          TK_NEGNUM},   // negative number
+  {"-",                 '-'},       // minus
+  {"\\*",               '*'},       // multi
+  {"/",                 '/'},       // div
   {"\\(",               '('},         // left parentheses
   {"\\)",               ')'},         // right parentheses
   {"^0x[0-9a-fA-F]+",   TK_HEXNUM},   // hex number
@@ -111,13 +111,23 @@ static bool make_token(char *e) {
           case TK_HEXNUM:
             tokens[nr_token].type = TK_HEXNUM;
             break;
-          case TK_OP:
-            if ('\\' == rules[nr_token].regex[0]) {
-                tokens[nr_token].type = (uint8_t)rules[i].regex[1];
-            } else {
-                tokens[nr_token].type = (uint8_t)rules[i].regex[0];
-            }
-            tokens[nr_token].type = (uint8_t)rules[i].regex[0];
+          case '+':
+            tokens[nr_token].type = '+';
+            break;
+          case '-':
+            tokens[nr_token].type = '-';
+            break;
+          case '*':
+            tokens[nr_token].type = '*';
+            break;
+          case '/':
+            tokens[nr_token].type = '/';
+            break;
+          case TK_NEGNUM:
+            tokens[nr_token].type = TK_NEGNUM;
+            break;
+          case TK_EQ:
+            tokens[nr_token].type = TK_EQ;
             break;
           case TK_NOTYPE:
             break;
