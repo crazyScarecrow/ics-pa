@@ -180,7 +180,29 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
 
 bool check_parentheses(uint32_t p, uint32_t q)
 {
-    return false;
+    uint32_t parentheses_depth = 0, index = 0;
+    if ('(' != tokens[p].type || ')' != tokens[q].type) {
+        return false;
+    }
+
+    for (index = p; index <= q; index++) {
+        if ('(' == tokens[index].type) {
+            parentheses_depth++;
+        }
+        if (')' == tokens[index].type) {
+            if (0 == parentheses_depth) {
+                Warning("express invalid");
+                return false;
+            }
+            parentheses_depth--;
+        }
+        if (parentheses_depth == 0 && index == q) {
+            Warning("express invalid");
+            return false;
+        }
+    }
+    Log("check parentheses success\n");
+    return true;
 }
 
 
