@@ -197,12 +197,12 @@ bool check_parentheses(uint32_t p, uint32_t q)
         }
         if (')' == tokens[index].type) {
             if (0 == parentheses_depth) {
-                Warning("express invalid");
+                Warning("express invalid, more ')'");
                 return false;
             }
             parentheses_depth--;
         }
-        if (parentheses_depth == 0 && index == q) {
+        if (parentheses_depth == 0 && index != q) {
             Warning("express invalid");
             return false;
         }
