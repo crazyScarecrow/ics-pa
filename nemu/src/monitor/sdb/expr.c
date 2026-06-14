@@ -155,11 +155,23 @@ static bool make_token(char *e) {
 static uint32_t get_main_op_position(uint32_t p, uint32_t q)
 {
     uint32_t index = 0, main_position = 0;
+    int32_t add_sub_pos = -1;
+    int32_t mul_div_pos = -1;
 
     for (index = p; index <= q; index++) {
         if (tokens[index].type == '+' ||tokens[index].type == '-') {
-            main_position = index;
+            add_sub_pos = index;
         }
+        if ((tokens[index].type == '*' ||tokens[index].type == '/') && 
+            add_sub_pos == -1) {
+            mul_div_pos = index;
+        }
+    }
+
+    if (-1 != add_sub_pos) {
+        main_position = add_sub_pos;
+    } else if (-1 != mul_div_pos) {
+        main_position = mul_div_pos;
     }
 
     return main_position;
