@@ -152,9 +152,18 @@ static bool make_token(char *e) {
   return true;
 }
 
-static uint32_t get_main_op_position()
+static uint32_t get_main_op_position(uint32_t p, uint32_t q)
 {
-    return 0;
+    uint32_t index = 0, main_position = 0;
+
+    for (index = p; index <q; index++) {
+        if (tokens[index].type == '+') {
+            main_position = q;
+        }
+        index++;
+    }
+
+    return main_position;
 }
 
 
@@ -186,7 +195,7 @@ int32_t eval(uint32_t p, uint32_t q){
     return eval(p + 1, q - 1);
   }
   else {
-    op = get_main_op_position();
+    op = get_main_op_position(p, q);
     val1 = eval(p, op - 1);
     val2 = eval(op + 1, q);
 
