@@ -152,9 +152,57 @@ static bool make_token(char *e) {
   return true;
 }
 
-void eval(uint32_t start, uint32_t end)
+static uint32_t get_main_op_position()
 {
-    printf("fuck\n");
+    return 0;
+}
+
+
+bool check_parentheses(uint32_t p, uint32_t q)
+{
+    return false;
+}
+
+
+int32_t eval(uint32_t p, uint32_t q){
+  uint32_t val1 = 0, val2 = 0;
+  uint32_t op = 0;
+  if (p > q) {
+    /* Bad expression */
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+     if (TK_NUM == tokens[p].type) {
+        return atoi(tokens[p].str);
+     }
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    op = get_main_op_position();
+    val1 = eval(p, op - 1);
+    val2 = eval(op + 1, q);
+
+    switch (tokens[p].type) {
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
+      case '/': 
+        if (0 == val2) {
+            panic("Division by zero is illegal\n");
+        }
+        return val1 / val2;
+      default: assert(0);
+    }
+  }
+  return 0;
 }
 
 word_t expr(char *e, bool *success) {
@@ -165,8 +213,6 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-  eval(0,0);
   *success = true;
-
-  return 0;
+  return eval(0,nr_token - 1);
 }
