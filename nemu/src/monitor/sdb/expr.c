@@ -163,8 +163,15 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
     uint32_t index = 0, main_position = 0;
     int32_t add_sub_pos = -1;
     int32_t mul_div_pos = -1;
+    bool filter = false;
 
     for (index = p; index <= q; index++) {
+        if (tokens[index].type == '(') {
+            filter = true;
+        } else if (tokens[index].type == ')') {
+            filter = false;
+        }
+        if (true == filter) continue;
         if (tokens[index].type == '+' ||tokens[index].type == '-') {
             add_sub_pos = index;
         }
