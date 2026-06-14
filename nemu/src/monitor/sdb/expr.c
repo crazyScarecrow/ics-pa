@@ -156,11 +156,10 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
 {
     uint32_t index = 0, main_position = 0;
 
-    for (index = p; index <q; index++) {
+    for (index = p; index <= q; index++) {
         if (tokens[index].type == '+') {
             main_position = q;
         }
-        index++;
     }
 
     return main_position;
