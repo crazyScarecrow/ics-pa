@@ -119,16 +119,17 @@ static int cmd_mem_scan(char *args) {
 
 static int cmd_p(char *args) {
     bool is_success = false;
+    int32_t value = 0;
     if (NULL == args) {
         Warning("The express is NULL");
         return 0;
     }
-    expr(args, &is_success);
+    value = expr(args, &is_success);
     if (!is_success) {
         Warning("The expr executed failed");
         return 0;
     }
-
+    printf("%d\n", value);
     return 0;
 }
 
