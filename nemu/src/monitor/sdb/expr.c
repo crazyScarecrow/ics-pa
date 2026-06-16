@@ -115,20 +115,11 @@ static bool make_token(char *e) {
             tokens[nr_token].type = '+';
             break;
           case '-':
-            if (0 == nr_token) {
-                while (*(e + position) == ' '){
-                    position++;
-                }
-                if (*(e + position) >= '0' && *(e + position) <= '9') {
-                    tokens[nr_token].type = TK_NEGNUM;
-                }
-                while (*(e + position) >= '0' && *(e + position) <= '9'){
-                    neg_strlen++;
-                    position++;
-                }
-                substr_len += neg_strlen;
-            } else if (tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' || 
-                       tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/') {
+            /*
+             *  Filter the '-1', '1 + -1' express
+             */
+            if (0 == nr_token ||(tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' || 
+                       tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/')) {
                 while (*(e + position) == ' '){
                     position++;
                 }
@@ -271,8 +262,12 @@ int32_t eval(uint32_t p, uint32_t q){
   else {
     op = get_main_op_position(p, q);
     if (op == 0) {
-        Warning("The express is invalid, please check");
-        return 0;
+        if (tokens[op].type == '-') {
+            return -eval(p + 1, q);
+        } else {
+            Warning("The express is invalid, please check");
+            return 0;
+        }
     }
     val1 = eval(p, op - 1);
     val2 = eval(op + 1, q);
