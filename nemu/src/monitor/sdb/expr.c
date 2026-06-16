@@ -242,6 +242,10 @@ int32_t eval(uint32_t p, uint32_t q){
   }
   else {
     op = get_main_op_position(p, q);
+    if (op == 0) {
+        Warning("The express is invalid, please check");
+        return 0;
+    }
     val1 = eval(p, op - 1);
     val2 = eval(op + 1, q);
 
