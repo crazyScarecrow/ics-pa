@@ -78,6 +78,7 @@ typedef struct token {
 
 static Token tokens[32] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
+static bool eval_success = true;
 
 static bool make_token(char *e) {
   int position = 0;
@@ -237,9 +238,10 @@ bool check_parentheses(uint32_t p, uint32_t q)
 }
 
 
-int32_t eval(uint32_t p, uint32_t q){
+word_t eval(uint32_t p, uint32_t q){
   uint32_t val1 = 0, val2 = 0;
   uint32_t op = 0;
+  if (!eval_success) return 0;
   if (p > q) {
     /* Bad expression */
   }
@@ -249,9 +251,9 @@ int32_t eval(uint32_t p, uint32_t q){
      * Return the value of the number.
      */
      switch (tokens[p].type) {
-        case TK_NUM:        return atoi(tokens[p].str);
-        case TK_HEXNUM:     return strtol(tokens[p].str, NULL, 0);
-        case TK_NEGNUM:     return atoi(tokens[p].str);
+        case TK_NUM:        return strtoul(tokens[p].str, NULL, 10);
+        case TK_HEXNUM:     return strtoul(tokens[p].str, NULL, 0);
+        case TK_NEGNUM:     return strtoul(tokens[p].str, NULL, 10);
      }
   }
   else if (check_parentheses(p, q) == true) {
@@ -271,15 +273,18 @@ int32_t eval(uint32_t p, uint32_t q){
         }
     }
     val1 = eval(p, op - 1);
+
     val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
       case '-': return val1 - val2;
       case '*': return val1 * val2;
-      case '/': 
+      case '/':
         if (0 == val2) {
-            panic("Division by zero is illegal\n");
+            eval_success = false;
+            Warning("Division by zero is illegal");
+            return 0;
         }
         return val1 / val2;
       default: assert(0);
@@ -296,6 +301,8 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
-  *success = true;
-  return eval(0,nr_token - 1);
+  eval_success = true;
+  word_t result = eval(0, nr_token - 1);
+  *success = eval_success;
+  return result;
 }

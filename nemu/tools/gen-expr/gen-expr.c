@@ -19,6 +19,7 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
+#include <sys/wait.h>
 
 // this should be enough
 static char buf[65536] = {};
@@ -27,7 +28,7 @@ static char *code_format =
 "#include <stdio.h>\n"
 "int main() { "
 "  unsigned result = %s; "
-"  printf(\"%%u\", result); "
+"  printf(\"%%u\\n\", result); "
 "  return 0; "
 "}";
 
@@ -37,40 +38,48 @@ static uint32_t choose(uint32_t max_num) {
     return rand() % max_num;
 }
 
+static void gen_space() {
+    int n = choose(3);  // 0, 1, or 2 spaces
+    for (int i = 0; i < n; i++) {
+        buf[expr_len++] = ' ';
+    }
+}
+
 static void gen_num(){
     int value = rand();
     expr_len += sprintf(buf + expr_len, "%u", value);
-    return;
 }
 
 static void gen(char ch) {
+    if (ch == '(') {
+        gen_space();
+    }
     buf[expr_len++] = ch;
 }
 
 static void gen_rand_op(){
+    gen_space();    // space before operator
     uint32_t op_index = choose(4);
     switch(op_index) {
-        case 0:
-            buf[expr_len++] = '+';
-            break;
-        case 1:
-            buf[expr_len++] = '-';
-            break;
-        case 2:
-            buf[expr_len++] = '*';
-            break;
-        case 3:
-            buf[expr_len++] = '/';
-            break;
+        case 0: buf[expr_len++] = '+'; break;
+        case 1: buf[expr_len++] = '-'; break;
+        case 2: buf[expr_len++] = '*'; break;
+        case 3: buf[expr_len++] = '/'; break;
     }
+    gen_space();    // space after operator
 }
 
 static void gen_rand_expr() {
+    /* Prevent buf overflow: force termination when buffer is nearly full */
+    if (expr_len >= 65500) {
+        gen_num();
+        return;
+    }
     switch (choose(3)) {
     case 0: gen_num(); break;
     case 1: gen('('); gen_rand_expr(); gen(')'); break;
     default: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
-  }
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -84,6 +93,7 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < loop; i ++) {
     expr_len = 0;
     gen_rand_expr();
+    buf[expr_len] = '\0';
 
     sprintf(code_buf, code_format, buf);
 
@@ -92,7 +102,7 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc /tmp/.code.c -o /tmp/.expr 2>/dev/null");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
@@ -100,7 +110,10 @@ int main(int argc, char *argv[]) {
 
     int result;
     ret = fscanf(fp, "%d", &result);
-    pclose(fp);
+    int status = pclose(fp);
+
+    /* Filter out runtime errors (division by zero → SIGFPE, etc.) */
+    if (ret != 1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0) continue;
 
     printf("%u %s\n", result, buf);
   }
