@@ -194,9 +194,6 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
 bool check_parentheses(uint32_t p, uint32_t q)
 {
     uint32_t parentheses_depth = 0, index = 0;
-    if ('(' != tokens[p].type || ')' != tokens[q].type) {
-        return false;
-    }
 
     for (index = p; index <= q; index++) {
         if ('(' == tokens[index].type) {
@@ -214,7 +211,7 @@ bool check_parentheses(uint32_t p, uint32_t q)
             return false;
         }
     }
-    Log("check parentheses success\n");
+    Log("check parentheses success");
     return true;
 }
 
