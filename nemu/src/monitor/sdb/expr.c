@@ -236,7 +236,7 @@ int32_t eval(uint32_t p, uint32_t q){
      switch (tokens[p].type) {
         case TK_NUM:        return atoi(tokens[p].str);
         case TK_HEXNUM:     return strtol(tokens[p].str, NULL, 0);
-        case TK_NEGNUM:     return 0 - atoi(tokens[p].str);
+        case TK_NEGNUM:     return atoi(tokens[p].str);
      }
   }
   else if (check_parentheses(p, q) == true) {
