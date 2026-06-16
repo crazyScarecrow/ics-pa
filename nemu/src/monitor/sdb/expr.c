@@ -41,7 +41,7 @@ static struct rule {
   // Finally only plain +.
   {"\\+",               '+'},       // plus
   {"==",                TK_EQ},       // equal
-  //{"^-[0-9]+",          TK_NEGNUM},   // negative number
+  {"[0-9+*/]*-[0-9]+",          TK_NEGNUM},   // negative number
   {"-",                 '-'},       // minus
   {"\\*",               '*'},       // multi
   {"/",                 '/'},       // div
