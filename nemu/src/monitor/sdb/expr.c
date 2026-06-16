@@ -116,9 +116,7 @@ static bool make_token(char *e) {
             break;
           case '-':
             if (0 == nr_token) {
-                while (*(e + position) == ' '){
-                    position++;
-                }
+
                 if (*(e + position) >= '0' && *(e + position) <=9) {
                     tokens[nr_token].type = TK_NEGNUM;
                 }
