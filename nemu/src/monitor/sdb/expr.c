@@ -124,6 +124,7 @@ static bool make_token(char *e) {
                 }
                 while (*(e + position) >= '0' && *(e + position) <= '9'){
                     neg_strlen++;
+                    position++;
                 }
                 substr_len += neg_strlen;
             } else {
