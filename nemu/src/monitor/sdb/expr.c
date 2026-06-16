@@ -235,6 +235,8 @@ int32_t eval(uint32_t p, uint32_t q){
      */
      if (TK_NUM == tokens[p].type) {
         return atoi(tokens[p].str);
+     } else if (TK_HEXNUM == tokens[p].type) {
+        return strtol(tokens[p].str, NULL, 0);
      }
   }
   else if (check_parentheses(p, q) == true) {
