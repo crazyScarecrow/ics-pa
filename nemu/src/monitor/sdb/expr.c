@@ -116,8 +116,10 @@ static bool make_token(char *e) {
             break;
           case '-':
             /*
-             *  Filter the '-1', '1 + -1' express
+             *  Filter the '-1', '1 + -1' express.
+             *  assign type firstly
              */
+            tokens[nr_token].type = '-';
             if (0 == nr_token ||(tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' || 
                        tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/')) {
                 while (*(e + position) == ' '){
@@ -131,8 +133,6 @@ static bool make_token(char *e) {
                     position++;
                 }
                 substr_len += neg_strlen;
-            } else{
-                tokens[nr_token].type = '-';
             }
             break;
           case '*':
