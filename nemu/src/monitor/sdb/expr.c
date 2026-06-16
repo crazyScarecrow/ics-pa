@@ -83,6 +83,7 @@ static int nr_token __attribute__((used))  = 0;
 static bool make_token(char *e) {
   int position = 0;
   int i;
+  bool neg_2_minus = false;
   regmatch_t pmatch;
 
   nr_token = 0;
@@ -130,7 +131,15 @@ static bool make_token(char *e) {
             tokens[nr_token].type = ')';
             break;
           case TK_NEGNUM:
-            tokens[nr_token].type = TK_NEGNUM;
+            if (nr_token == 0 ||
+                (tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' ||
+                 tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/' ||
+                 tokens[nr_token - 1].type == '(' || tokens[nr_token - 1].type == ')' ))
+                tokens[nr_token].type = TK_NEGNUM;
+            else {
+                tokens[nr_token].type = '-';
+                neg_2_minus = true;
+            }
             break;
           case TK_EQ:
             tokens[nr_token].type = TK_EQ;
@@ -141,10 +150,11 @@ static bool make_token(char *e) {
         }
         if (rules[i].token_type != TK_NOTYPE) {
             memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
+            if (neg_2_minus) substr_start++;
             memcpy(tokens[nr_token].str, substr_start, substr_len);
             nr_token++;
         }
-
+        neg_2_minus = false;
         break;
       }
     }
