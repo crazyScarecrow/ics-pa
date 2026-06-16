@@ -233,10 +233,10 @@ int32_t eval(uint32_t p, uint32_t q){
      * For now this token should be a number.
      * Return the value of the number.
      */
-     if (TK_NUM == tokens[p].type) {
-        return atoi(tokens[p].str);
-     } else if (TK_HEXNUM == tokens[p].type) {
-        return strtol(tokens[p].str, NULL, 0);
+     switch (tokens[p].type) {
+        case TK_NUM:        return atoi(tokens[p].str);
+        case TK_HEXNUM:     return strtol(tokens[p].str, NULL, 0);
+        case TK_NEGNUM:     return 0 - atoi(tokens[p].str);
      }
   }
   else if (check_parentheses(p, q) == true) {
