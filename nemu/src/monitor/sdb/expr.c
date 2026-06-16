@@ -121,7 +121,7 @@ static bool make_token(char *e) {
              */
             tokens[nr_token].type = '-';
             if (0 == nr_token ||(tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' || 
-                       tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/')) {
+                       tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/' || tokens[nr_token - 1].type == '(')) {
                 while (*(e + position) == ' '){
                     position++;
                 }
@@ -157,6 +157,7 @@ static bool make_token(char *e) {
         if (rules[i].token_type != TK_NOTYPE) {
             memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
             memcpy(tokens[nr_token].str, substr_start, substr_len);
+            neg_strlen = 0;
             nr_token++;
         }
         break;
