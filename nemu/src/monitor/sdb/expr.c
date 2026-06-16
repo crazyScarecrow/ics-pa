@@ -127,7 +127,20 @@ static bool make_token(char *e) {
                     position++;
                 }
                 substr_len += neg_strlen;
-            } else {
+            } else if (tokens[nr_token - 1].type == '+' || tokens[nr_token - 1].type == '-' || 
+                       tokens[nr_token - 1].type == '*' || tokens[nr_token - 1].type == '/') {
+                while (*(e + position) == ' '){
+                    position++;
+                }
+                if (*(e + position) >= '0' && *(e + position) <= '9') {
+                    tokens[nr_token].type = TK_NEGNUM;
+                }
+                while (*(e + position) >= '0' && *(e + position) <= '9'){
+                    neg_strlen++;
+                    position++;
+                }
+                substr_len += neg_strlen;
+            } else{
                 tokens[nr_token].type = '-';
             }
             break;
