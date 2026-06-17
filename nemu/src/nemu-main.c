@@ -34,6 +34,7 @@ static void verify_express()
             buf[index++] = ch;
         } else {
             expr = buf;
+            printf("-->%s\n", expr);
             result = strtok(expr, " ");
             if (result) {
                 printf("result is %s\n", result);
