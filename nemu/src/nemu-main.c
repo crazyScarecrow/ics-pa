@@ -23,11 +23,23 @@ int is_exit_status_bad();
 static void verify_express()
 {
     char ch = '0';
+    char buf[2048] = { 0 };
+    int index = 0;
+    char* result = NULL;
     char *file_path = "/home/snow/ics-pa/nemu/tools/gen-expr/build/input";
     FILE* fp = fopen(file_path, "r");
     assert(NULL != fp);
     while ((ch = fgetc(fp)) != EOF) {
-        putchar(ch);
+        if (ch != '\n') {
+            buf[index++] = ch;
+        } else {
+            result = strtok(buf, " ");
+            if (!result) {
+                printf("result is %s\n", result);
+            }
+            memset(buf, 0, 2048);
+            index = 0;
+        }
     }
 }
 
