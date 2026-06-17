@@ -23,7 +23,7 @@ int is_exit_status_bad();
 static void verify_express()
 {
     char ch = '0';
-    char buf[2048] = { 0 };
+    char buf[4096] = { 0 };
     int index = 0;
     char* result = NULL;
     char *file_path = "/home/snow/ics-pa/nemu/tools/gen-expr/build/input";
@@ -37,7 +37,7 @@ static void verify_express()
             if (!result) {
                 printf("result is %s\n", result);
             }
-            memset(buf, 0, 2048);
+            memset(buf, 0, 4096);
             index = 0;
         }
     }
