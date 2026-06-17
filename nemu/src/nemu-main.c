@@ -36,6 +36,7 @@ static void verify_express()
             result = strtok(buf, " ");
             if (result) {
                 printf("result is %s\n", result);
+                printf("\texpress is %s\n", buf);
             }
             memset(buf, 0, 30720);
             index = 0;
