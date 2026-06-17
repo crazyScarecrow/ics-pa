@@ -20,7 +20,20 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
+static void verify_express()
+{
+    char ch = '0';
+    char *file_path = "/home/snow/ics-pa/nemu/tools/gen-expr/build/input";
+    FILE* fp = fopen(file_path, "r");
+    assert(NULL != fp);
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }
+}
+
 int main(int argc, char *argv[]) {
+    verify_express();
+    return 0;
   /* Initialize the monitor. */
 #ifdef CONFIG_TARGET_AM
   am_init_monitor();
