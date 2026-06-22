@@ -21,8 +21,10 @@ void engine_start();
 int is_exit_status_bad();
 
 extern word_t expr(char *e, bool *success);
+extern void init_regex(void);
 static void verify_express()
 {
+    init_regex();
     char ch = '0';
     char buf[30720] = { 0 };
     int index = 0;
