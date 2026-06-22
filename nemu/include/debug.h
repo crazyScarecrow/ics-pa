@@ -27,6 +27,8 @@
 #define Warning(format, ...) \
     _Log(ANSI_FMT(format, ANSI_FG_RED) "\n", ## __VA_ARGS__)
 
+#define Info(format, ...) \
+    _Log(ANSI_FMT(format, ANSI_FG_GREEN) "\n", ## __VA_ARGS__)
 
 #define Assert(cond, format, ...) \
   do { \
