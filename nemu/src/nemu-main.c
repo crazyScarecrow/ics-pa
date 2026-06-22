@@ -20,6 +20,7 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
+#if 0
 extern word_t expr(char *e, bool *success);
 extern void init_regex(void);
 static void verify_express()
@@ -53,10 +54,10 @@ static void verify_express()
         }
     }
 }
-
+#endif
 int main(int argc, char *argv[]) {
-    verify_express();
-    return 0;
+    //verify_express();
+    //return 0;
   /* Initialize the monitor. */
 #ifdef CONFIG_TARGET_AM
   am_init_monitor();
