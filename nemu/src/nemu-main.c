@@ -20,11 +20,14 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
+extern word_t expr(char *e, bool *success);
 static void verify_express()
 {
     char ch = '0';
     char buf[30720] = { 0 };
     int index = 0;
+    bool is_success = false;
+    uint32_t expr_ret = 0;
     char* result = NULL;
     char *file_path = "/home/snow/ics-pa/nemu/tools/gen-expr/build/input";
     FILE* fp = fopen(file_path, "r");
@@ -33,12 +36,15 @@ static void verify_express()
         if (ch != '\n') {
             buf[index++] = ch;
         } else {
-            printf("-->%s\n", buf);
             result = strstr(buf, " ");
             if (result) {
                 buf[result-buf] = '\0';
-                printf("result is %s\n", buf);
-                printf("\texpress is %s\n", buf + (result-buf + 1));
+                expr_ret = strtoul(buf, NULL, 0);
+                if (expr_ret == expr(buf + (result-buf + 1), &is_success)) {
+                    Log("check success\n");
+                } else{
+                    Warning("\texpress is %s\n", buf + (result-buf + 1));
+                }
             }
             memset(buf, 0, 30720);
             index = 0;
