@@ -25,7 +25,7 @@ static void verify_express()
     char ch = '0';
     char buf[30720] = { 0 };
     int index = 0;
-    char* result = NULL, *expr = NULL;
+    char* result = NULL;
     char *file_path = "/home/snow/ics-pa/nemu/tools/gen-expr/build/input";
     FILE* fp = fopen(file_path, "r");
     assert(NULL != fp);
@@ -33,12 +33,12 @@ static void verify_express()
         if (ch != '\n') {
             buf[index++] = ch;
         } else {
-            expr = buf;
-            printf("-->%s\n", expr);
-            result = strtok(expr, " ");
+            printf("-->%s\n", buf);
+            result = strstr(buf, " ");
             if (result) {
-                printf("result is %s\n", result);
-                printf("\texpress is %s\n", expr);
+                buf[result-buf] = '\0';
+                printf("result is %s\n", buf);
+                printf("\texpress is %s\n", buf + (result-buf + 1));
             }
             memset(buf, 0, 30720);
             index = 0;
