@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_REG
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_REG,TK_NOTEQ
 
   /* TODO: Add more token types */
 
@@ -41,6 +41,7 @@ static struct rule {
   // Finally only plain +.
   {"\\+",               '+'},       // plus
   {"==",                TK_EQ},       // equal
+  {"!=",                TK_NOTEQ},    // not equal
   {"-",                 '-'},       // minus
   {"\\*",               '*'},       // multi
   {"/",                 '/'},       // div
@@ -152,6 +153,9 @@ static bool make_token(char *e) {
           case TK_EQ:
             tokens[nr_token].type = TK_EQ;
             break;
+          case TK_NOTEQ:
+            tokens[nr_token].type = TK_NOTEQ;
+            break;
           case TK_REG:
             tokens[nr_token].type = TK_REG;
             break;
@@ -183,6 +187,7 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
     uint32_t index = 0, main_position = 0;
     int32_t add_sub_pos = -1;
     int32_t mul_div_pos = -1;
+    int32_t relation_pos = -1;
     bool filter = false;
 
     for (index = p; index <= q; index++) {
@@ -195,13 +200,19 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
         if (tokens[index].type == '+' ||tokens[index].type == '-') {
             add_sub_pos = index;
         }
+        if (tokens[index].type == TK_EQ ||tokens[index].type == TK_NOTEQ) {
+            relation_pos = index;
+        }
         if ((tokens[index].type == '*' ||tokens[index].type == '/') && 
             add_sub_pos == -1) {
             mul_div_pos = index;
         }
+        
     }
 
-    if (-1 != add_sub_pos) {
+    if (-1 != relation_pos) {
+        main_position = relation_pos;
+    } else if (-1 != add_sub_pos) {
         main_position = add_sub_pos;
     } else if (-1 != mul_div_pos) {
         main_position = mul_div_pos;
