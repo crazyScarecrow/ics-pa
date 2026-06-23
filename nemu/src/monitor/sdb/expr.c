@@ -152,6 +152,9 @@ static bool make_token(char *e) {
           case TK_EQ:
             tokens[nr_token].type = TK_EQ;
             break;
+          case TK_REG:
+            tokens[nr_token].type = TK_REG;
+            break;
           case TK_NOTYPE:
             break;
           default: TODO();
@@ -255,6 +258,7 @@ word_t eval(uint32_t p, uint32_t q){
         case TK_NUM:        return strtoul(tokens[p].str, NULL, 10);
         case TK_HEXNUM:     return strtoul(tokens[p].str, NULL, 0);
         case TK_NEGNUM:     return strtoul(tokens[p].str, NULL, 10);
+        case TK_REG:        return isa_reg_str2val(tokens[p].str, NULL);
      }
   }
   else if (check_parentheses(p, q) == true) {

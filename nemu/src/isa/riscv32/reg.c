@@ -34,5 +34,13 @@ void isa_reg_display() {
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
+    uint32_t i = 0;
+    if (0 == strncmp("$0", s, 2)) return cpu.gpr[0];
+    for (i = 1; i < 32; i++) {
+        if (0 == strncmp(s+1, regs[i], strlen(regs[i]))) {
+            return cpu.gpr[i];
+        }
+    }
+    Warning("The reg name invalid\n");
   return 0;
 }
