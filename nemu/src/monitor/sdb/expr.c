@@ -303,6 +303,8 @@ word_t eval(uint32_t p, uint32_t q){
             return 0;
         }
         return val1 / val2;
+     case TK_EQ: return val1 == val2;
+     case TK_NOTEQ: return val1 != val2;
       default: assert(0);
     }
   }
