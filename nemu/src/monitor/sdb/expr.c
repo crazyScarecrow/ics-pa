@@ -41,7 +41,7 @@ static struct rule {
   // Finally only plain +.
   {"\\+",               '+'},       // plus
   {"==",                TK_EQ},       // equal
-  //{"!=",               TK_NOTEQ},    // not equal
+  {"!=",               TK_NOTEQ},    // not equal
   {"-",                 '-'},       // minus
   {"\\*",               '*'},       // multi
   {"/",                 '/'},       // div
