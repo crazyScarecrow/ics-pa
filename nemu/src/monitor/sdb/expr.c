@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_REG,TK_NOTEQ
+  TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_HEXNUM, TK_NEGNUM, TK_REG,TK_NOTEQ, TK_AND, TK_DEREF
 
   /* TODO: Add more token types */
 
@@ -41,7 +41,8 @@ static struct rule {
   // Finally only plain +.
   {"\\+",               '+'},       // plus
   {"==",                TK_EQ},       // equal
-  {"!=",               TK_NOTEQ},    // not equal
+  {"!=",                TK_NOTEQ},    // not equal
+  {"&&",                TK_AND},    // and
   {"-",                 '-'},       // minus
   {"\\*",               '*'},       // multi
   {"/",                 '/'},       // div
@@ -156,6 +157,9 @@ static bool make_token(char *e) {
           case TK_NOTEQ:
             tokens[nr_token].type = TK_NOTEQ;
             break;
+          case TK_AND:
+            tokens[nr_token].type = TK_AND;
+            break;
           case TK_REG:
             tokens[nr_token].type = TK_REG;
             break;
@@ -252,7 +256,7 @@ bool check_parentheses(uint32_t p, uint32_t q)
     return true;
 }
 
-
+extern word_t vaddr_read(vaddr_t addr, int len);
 word_t eval(uint32_t p, uint32_t q){
   uint32_t val1 = 0, val2 = 0;
   uint32_t op = 0;
@@ -283,6 +287,8 @@ word_t eval(uint32_t p, uint32_t q){
     if (op == 0) {
         if (tokens[op].type == '-') {
             return -eval(p + 1, q);
+        } else if (tokens[op].type == TK_DEREF) {
+            return vaddr_read(eval(p + 1, q), sizeof(word_t));
         } else {
             Warning("The express is invalid, please check");
             return 0;
@@ -305,13 +311,15 @@ word_t eval(uint32_t p, uint32_t q){
         return val1 / val2;
      case TK_EQ: return val1 == val2;
      case TK_NOTEQ: return val1 != val2;
-      default: assert(0);
+     case TK_AND: return val1 && val2;
+     default: assert(0);
     }
   }
   return 0;
 }
 
 word_t expr(char *e, bool *success) {
+    uint32_t i = 0;
   if (!make_token(e)) {
     *success = false;
     return 0;
@@ -319,6 +327,12 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
+    for (i = 0; i < nr_token; i ++) {
+        if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
+                                                 tokens[i - 1].type == '*' || tokens[i - 1].type == '/')) ) {
+            tokens[i].type = TK_DEREF;
+        }
+    }
   eval_success = true;
   word_t result = eval(0, nr_token - 1);
   *success = eval_success;
