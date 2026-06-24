@@ -192,6 +192,7 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
     int32_t add_sub_pos = -1;
     int32_t mul_div_pos = -1;
     int32_t relation_pos = -1;
+    int32_t deref_pos = -1;
     bool filter = false;
 
     for (index = p; index <= q; index++) {
@@ -211,6 +212,9 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
             add_sub_pos == -1) {
             mul_div_pos = index;
         }
+        if (tokens[index].type == TK_DEREF) {
+            deref_pos = index;
+        }
         
     }
 
@@ -220,6 +224,9 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
         main_position = add_sub_pos;
     } else if (-1 != mul_div_pos) {
         main_position = mul_div_pos;
+    } else if (-1 != deref_pos) {
+        main_position = deref_pos;
+        printf("deref index is %d\n", deref_pos);
     }
 
     return main_position;
@@ -294,6 +301,10 @@ word_t eval(uint32_t p, uint32_t q){
             return 0;
         }
     }
+    if (tokens[op].type == TK_DEREF) {
+        return vaddr_read(eval(p + 1, q), sizeof(word_t));
+    }
+
     val1 = eval(p, op - 1);
 
     val2 = eval(op + 1, q);
