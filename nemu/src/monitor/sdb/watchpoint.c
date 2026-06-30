@@ -69,6 +69,7 @@ void free_wp(WP *wp_pointer)
 
     /* remove the ep from head */
     if (head == wp_pointer) {
+        cur = head;
         head = head->next;
     } else {
         cur = head;
