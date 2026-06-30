@@ -137,6 +137,16 @@ static int cmd_p(char *args) {
     return 0;
 }
 
+extern void create_wp(char * args);
+static int cmd_w(char *args) {
+    if (NULL == args) {
+        Warning("Invalid watchpoint express");
+        return -1;
+    }
+    create_wp(args);
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -150,6 +160,7 @@ static struct {
   { "info", "Print register/watchpointer information, e.g. info r/w", cmd_info},
   { "x", "Scan the specified memory area. e.g. x 10 0x80000000", cmd_mem_scan},
   { "p", "Evaluate the expression, p expr", cmd_p},
+  { "w", "Set a watch point. e.g. w $0", cmd_w},
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */

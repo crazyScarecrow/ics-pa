@@ -113,3 +113,27 @@ void show_wp_info() {
         }
     }
 }
+
+extern word_t expr(char * e, bool * success);
+
+void create_wp(char *args) {
+    WP *wp = NULL;
+    bool is_success = false;;
+
+    if (NULL == args) {
+        Warning("Invalid args\n");
+        return;
+    }
+
+    wp = new_wp();
+    if (NULL == wp) {
+        Warning("There is no more watch point\n");
+        return;
+    }
+
+    memset(wp->wp_name, 0, WP_NAME_LEN);
+    strncpy(wp->wp_name, args, strlen(args));
+    wp->orig_val = expr(args, &is_success);
+
+    return;
+}
