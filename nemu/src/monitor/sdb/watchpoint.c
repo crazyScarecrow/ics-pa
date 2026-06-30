@@ -46,13 +46,9 @@ WP* new_wp()
     free_ = free_->next;
     temp->next = NULL;
 
-    /* add the wp to the head */
-    if (NULL == head) {
-        head = temp;
-    } else {
-       temp->next = head->next;
-       head->next = temp;
-    }
+    /* add the wp to the head (head insertion) */
+    temp->next = head;
+    head = temp;
 
     temp->NO = wp_idx++;
 
@@ -67,7 +63,7 @@ void free_wp(WP *wp_pointer)
         return;
     }
 
-    /* remove the ep from head */
+    /* remove the wp from active list */
     if (head == wp_pointer) {
         cur = head;
         head = head->next;
@@ -82,9 +78,14 @@ void free_wp(WP *wp_pointer)
             prev = cur;
             cur = cur->next;
         }
+        if (NULL == cur) {
+            Warning("Watchpoint #%d is not in the active list", wp_pointer->NO);
+            return;
+        }
     }
 
-    cur->next = free_->next;
+    /* return to free list */
+    cur->next = free_;
     free_ = cur;
     return;
 }
@@ -119,7 +120,7 @@ extern word_t expr(char * e, bool * success);
 
 void create_wp(char *args) {
     WP *wp = NULL;
-    bool is_success = false;;
+    bool is_success = false;
 
     if (NULL == args) {
         Warning("Invalid args\n");
@@ -133,8 +134,14 @@ void create_wp(char *args) {
     }
 
     memset(wp->wp_name, 0, WP_NAME_LEN);
-    strncpy(wp->wp_name, args, strlen(args));
+    strncpy(wp->wp_name, args, WP_NAME_LEN - 1);
+    wp->wp_name[WP_NAME_LEN - 1] = '\0';
     wp->orig_val = expr(args, &is_success);
+    if (!is_success) {
+        Warning("Invalid expression, watchpoint not set\n");
+        free_wp(wp);
+        return;
+    }
 
     return;
 }
@@ -153,6 +160,12 @@ void del_wp(uint32_t wp_no) {
         }
         temp = temp->next;
     }
+
+    if (NULL == temp) {
+        Warning("Watchpoint #%d not found", wp_no);
+        return;
+    }
+
     free_wp(temp);
 
     return;
