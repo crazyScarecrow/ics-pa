@@ -71,6 +71,7 @@ static int cmd_si(char *args) {
     return 0;
 }
 
+extern void show_wp_info();
 static int cmd_info(char *args) {
     if (args == NULL) {
         Warning("The info cmd should use with args (w/r)");
@@ -78,6 +79,9 @@ static int cmd_info(char *args) {
     }
     if (0 == strncmp("r", args, 1)) {
         isa_reg_display();
+        return 0;
+    } else if (0 == strncmp("w", args, 1)) {
+        show_wp_info();
         return 0;
     }
     return 0;

@@ -16,6 +16,7 @@
 #include "sdb.h"
 
 #define NR_WP 32
+#define WP_NAME_LEN 32
 
 typedef struct watchpoint {
   int NO;
@@ -24,11 +25,13 @@ typedef struct watchpoint {
   /* TODO: Add more members if necessary */
   uint32_t orig_val;
   uint32_t cur_val;
+  char wp_name[WP_NAME_LEN];
 
 } WP;
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+static int wp_idx = 1;
 
 WP* new_wp()
 {
@@ -50,6 +53,8 @@ WP* new_wp()
        temp->next = head->next;
        head->next = temp;
     }
+
+    temp->NO = wp_idx++;
 
     return temp;
 }
@@ -95,4 +100,16 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
-
+void show_wp_info() {
+    WP* temp = NULL;
+    if (NULL == head) {
+        printf("No watchpoints.\n");
+    } else {
+        printf("No.        What\n");
+        temp = head;
+        while (NULL != temp) {
+           printf("%d        %s\n", temp->NO, temp->wp_name);
+           temp = temp->next;
+        }
+    }
+}
