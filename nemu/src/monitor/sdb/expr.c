@@ -293,7 +293,7 @@ word_t eval(uint32_t p, uint32_t q){
     if (op == 0) {
         if (tokens[op].type == '-') {
             return -eval(p + 1, q);
-        } else {
+        } else if (tokens[op].type != TK_DEREF) {
             Warning("The express is invalid, please check");
             return 0;
         }
