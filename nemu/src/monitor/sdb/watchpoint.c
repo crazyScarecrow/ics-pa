@@ -137,3 +137,22 @@ void create_wp(char *args) {
 
     return;
 }
+
+void del_wp(uint32_t wp_no) {
+    WP* temp = NULL;
+    if (NULL == head) {
+        Warning("There is no watch point");
+        return;
+    }
+
+    temp = head;
+    while (NULL != temp) {
+        if (wp_no == temp->NO) {
+            break;
+        }
+        temp = temp->next;
+    }
+    free_wp(temp);
+
+    return;
+}

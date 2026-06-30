@@ -147,6 +147,20 @@ static int cmd_w(char *args) {
     return 0;
 }
 
+extern void del_wp(uint32_t wp_no);
+static int cmd_d(char *args) {
+    uint32_t wp_no = 0;
+    if (NULL == args) {
+        Warning("Invalid del watchpoint express");
+        return -1;
+    }
+
+    wp_no = strtoul(args, NULL, 0);
+
+    del_wp(wp_no);
+    return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -161,6 +175,7 @@ static struct {
   { "x", "Scan the specified memory area. e.g. x 10 0x80000000", cmd_mem_scan},
   { "p", "Evaluate the expression, p expr", cmd_p},
   { "w", "Set a watch point. e.g. w $0", cmd_w},
+  { "d", "Delete the watch point by wp NO. e.g. d 1", cmd_d},
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
