@@ -43,8 +43,8 @@ WP* new_wp()
     }
     /* remove the wp from free_ */
     temp = free_;
-    temp->next = NULL;
     free_ = free_->next;
+    temp->next = NULL;
 
     /* add the wp to the head */
     if (NULL == head) {
