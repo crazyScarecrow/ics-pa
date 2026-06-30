@@ -22,11 +22,66 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+  uint32_t orig_val;
+  uint32_t cur_val;
 
 } WP;
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
+
+WP* new_wp()
+{
+    WP* temp = NULL;
+    if (NULL == free_) {
+        Warning("There is no more watch pointer resource");
+        assert(0);
+        return NULL;
+    }
+    /* remove the wp from free_ */
+    temp = free_;
+    temp->next = NULL;
+    free_ = free_->next;
+
+    /* add the wp to the head */
+    if (NULL == head) {
+        head = temp;
+    } else {
+       temp->next = head->next;
+       head->next = temp;
+    }
+
+    return temp;
+}
+
+void free_wp(WP *wp_pointer)
+{
+    WP *cur = NULL, *prev = NULL;
+    if (NULL == wp_pointer) {
+        Warning("Invalid watch pointer");
+        return;
+    }
+
+    /* remove the ep from head */
+    if (head == wp_pointer) {
+        head = head->next;
+    } else {
+        cur = head;
+        while (NULL != cur) {
+            if (cur == wp_pointer) {
+                prev->next = cur->next;
+                cur->next = NULL;
+                break;
+            }
+            prev = cur;
+            cur = cur->next;
+        }
+    }
+
+    cur->next = free_->next;
+    free_ = cur;
+    return;
+}
 
 void init_wp_pool() {
   int i;

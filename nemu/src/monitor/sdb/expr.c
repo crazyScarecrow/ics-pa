@@ -226,7 +226,6 @@ static uint32_t get_main_op_position(uint32_t p, uint32_t q)
         main_position = mul_div_pos;
     } else if (-1 != deref_pos) {
         main_position = deref_pos;
-        printf("deref index is %d\n", deref_pos);
     }
 
     return main_position;
@@ -294,8 +293,6 @@ word_t eval(uint32_t p, uint32_t q){
     if (op == 0) {
         if (tokens[op].type == '-') {
             return -eval(p + 1, q);
-        } else if (tokens[op].type == TK_DEREF) {
-            return vaddr_read(eval(p + 1, q), sizeof(word_t));
         } else {
             Warning("The express is invalid, please check");
             return 0;
@@ -340,7 +337,9 @@ word_t expr(char *e, bool *success) {
   //TODO();
     for (i = 0; i < nr_token; i ++) {
         if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type == '+' || tokens[i - 1].type == '-' ||
-                                                 tokens[i - 1].type == '*' || tokens[i - 1].type == '/')) ) {
+                                                 tokens[i - 1].type == '*' || tokens[i - 1].type == '/' || 
+                                                 tokens[i - 1].type == '(' || tokens[i - 1].type == TK_EQ ||
+                                                 tokens[i - 1].type == TK_NOTEQ || tokens[i - 1].type == TK_AND)) ) {
             tokens[i].type = TK_DEREF;
         }
     }
