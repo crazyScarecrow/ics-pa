@@ -173,7 +173,9 @@ void check_wp()
         if (temp->cur_val != temp->orig_val) {
             Log("trigger watch point, old val %u, cur val %u", temp->orig_val, temp->cur_val);
             set_nemu_state(NEMU_STOP, 0, 0);
+            break;
         }
+        temp = temp->next;
     }
     return;
 }
