@@ -157,3 +157,23 @@ void del_wp(uint32_t wp_no) {
 
     return;
 }
+
+extern void set_nemu_state(int state, vaddr_t pc, int halt_ret);
+void check_wp()
+{
+    WP *temp = NULL;
+    bool is_success = false;
+    if (NULL == head) {
+        Log("There is no watch point");
+        return;
+    }
+    temp = head;
+    while (NULL != temp) {
+        temp->cur_val = expr(temp->wp_name, &is_success);
+        if (temp->cur_val != temp->orig_val) {
+            Log("trigger watch point, old val %u, cur val %u", temp->orig_val, temp->cur_val);
+            set_nemu_state(NEMU_STOP, 0, 0);
+        }
+    }
+    return;
+}
